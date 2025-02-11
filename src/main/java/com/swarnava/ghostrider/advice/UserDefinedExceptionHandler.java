@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class UserDefinedExceptionHandler {
-    private static Logger logger = LoggerFactory.getLogger(UserDefinedExceptionHandler.class);
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @ExceptionHandler(AlreadyActiveRidingException.class)
     public ResponseEntity<MessageForUserDefinedException> handleAlreadyActiveRidingException(AlreadyActiveRidingException exception) {
-        logger.warn(exception.getMessage());
+        logger.warn(exception.getMessage(), " DATA: {}", exception.getData());
         return ResponseEntity.badRequest().body(new MessageForUserDefinedException(
                 exception.getMessage(), exception.getData(),
                 AlreadyActiveRidingException.class, exception.getStackTrace()[0].toString()

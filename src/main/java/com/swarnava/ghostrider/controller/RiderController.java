@@ -5,21 +5,27 @@ import com.swarnava.ghostrider.entity.RideRequest;
 import com.swarnava.ghostrider.service.RiderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/api/v1")
+import java.io.IOException;
+
+@RestController
+@RequestMapping("/api/v1")
 public class RiderController {
 
     @Autowired
     private RiderService riderService;
 
     @PostMapping("/requestride")
-    public ResponseEntity requestRide(@RequestBody RideRequestDTO rideRequestDTO) {
-        RideRequest rideRequest = riderService.requestRide(rideRequestDTO.userId(),
-                rideRequestDTO.pickupLocation(), rideRequestDTO.destination());
-        return ResponseEntity.ok().body(rideRequest);
+    public ResponseEntity requestRide(@RequestBody RideRequestDTO rideRequestDTO) throws IOException {
+        RideRequest rideRequest = riderService.requestRide(rideRequestDTO);
+        return ResponseEntity.accepted().body(rideRequest);
+    }
+
+    @GetMapping("/requestride")
+    public ResponseEntity checkRide(@RequestBody RideRequestDTO rideRequestDTO) throws IOException {
+//        RideRequest rideRequest = riderService.checkRide(rideRequestDTO);
+        return ResponseEntity.accepted().body(null);
     }
 
 }

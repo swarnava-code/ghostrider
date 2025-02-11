@@ -11,7 +11,9 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Coordinates implements Serializable {
-    private Double latitude;
-    private Double longitude;
+public class Location implements Serializable {
+    private String city;
+    private Integer postalCode;
+    private Coordinates coordinates;
+    private String address;
 }
