@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RideRequestDTO implements Serializable {
+public class BookingDTO implements Serializable {
     private String userId;
     private Location pickupLocation; // Location
     private Location destination;

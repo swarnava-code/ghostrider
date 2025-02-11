@@ -30,6 +30,7 @@ Demo Rider Project for Spring Boot. It will help passengers and rider to find ea
    ```sh
    mvn clean install
    ```
+4. Setup PostgreSQL db
 
 
 ## Responsibilities of the Client App (to minimize server load)
@@ -49,3 +50,8 @@ Need to deploy in a server and should be running, It will help passengers and ri
 
 ## License
 It's a demo app [Free]
+
+### TO-DO List
+- replace runtime exception handler, create more custom exception
+- replace native query
+- impl security

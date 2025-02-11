@@ -19,7 +19,7 @@ import java.util.Date;
 @RequiredArgsConstructor
 @ToString
 //@JsonIgnoreProperties(ignoreUnknown = true) // Ignore unknown JSON properties
-public class RideRequest {
+public class Booking {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)
     private String id;

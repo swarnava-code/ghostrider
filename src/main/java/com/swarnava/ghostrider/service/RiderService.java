@@ -1,17 +1,19 @@
 package com.swarnava.ghostrider.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.swarnava.ghostrider.dto.RideRequestDTO;
-import com.swarnava.ghostrider.entity.RideRequest;
+import com.swarnava.ghostrider.config.JsonMapper;
+import com.swarnava.ghostrider.dto.RiderDTO;
+import com.swarnava.ghostrider.entity.Booking;
+import com.swarnava.ghostrider.entity.Rider;
 import com.swarnava.ghostrider.enume.RideStatus;
-import com.swarnava.ghostrider.exception.AlreadyActiveRidingException;
-import com.swarnava.ghostrider.repository.RideRequestRepository;
+import com.swarnava.ghostrider.enume.RiderAvailability;
+import com.swarnava.ghostrider.exception.InvalidUserIdException;
+import com.swarnava.ghostrider.repository.BookingRepository;
 import com.swarnava.ghostrider.repository.RiderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,44 +23,80 @@ public class RiderService {
     RiderRepository riderRepository;
 
     @Autowired
-    RideRequestRepository rideRequestRepository;
+    JsonMapper jsonMapper;
 
     @Autowired
-    AssignRiderService assignRiderService;
+    BookingRepository bookingRepository;
 
-    @Autowired
-    ObjectMapper objectMapper;
-
-    public RideRequest requestRide(RideRequestDTO rideRequestDTO) throws IOException {
-
-        Optional<RideRequest> optionalRideRequest = rideRequestRepository.findByUserIdAndRideStatus(
-                rideRequestDTO.getUserId(), RideStatus.PENDING);
-        if (optionalRideRequest.isPresent()) {
-            RideRequest rideRequest = optionalRideRequest.get();
-            throw new AlreadyActiveRidingException(
-                    String.format("%s is already PENDING", rideRequest.getUserId()),
-                    rideRequest.toString()
-            );
-        }
-        log.debug("saving request... for {}",rideRequestDTO.getUserId());
-                String pickupJsonString="", destinationJsonString="";
-        try {
-            pickupJsonString = objectMapper.writeValueAsString(rideRequestDTO.getPickupLocation());
-            destinationJsonString = objectMapper.writeValueAsString(rideRequestDTO.getDestination());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        }
-        objectMapper.readTree(pickupJsonString);
-        RideRequest rideRequest = new RideRequest(rideRequestDTO.getUserId(),
-                objectMapper.readTree(pickupJsonString), objectMapper.readTree(destinationJsonString), RideStatus.PENDING);
-        RideRequest request = rideRequestRepository.save(rideRequest);
-        log.debug("startSearchingForRider... for {}",rideRequestDTO.getUserId());
-        assignRiderService.startSearchingForRider(rideRequestDTO.getUserId()); // this will run in bg
-        return request;
+    /**
+     * call after signup
+     *
+     * @return
+     */
+    public Optional<Rider> saveNewRider(RiderDTO riderDTO) throws JsonProcessingException {
+        Rider rider = new Rider();
+        rider.setName(riderDTO.getName());
+        rider.setCurrentLocation(jsonMapper.getJsonNode(riderDTO.getCurrentLocation()));
+        rider.setRiderAvailability(RiderAvailability.BREAK);
+        return Optional.of(riderRepository.save(rider));
     }
 
-    public Optional<RideRequest> findRecentBooking(String userId) {
-        return rideRequestRepository.findRecentBooking(userId);
+    public Optional<Rider> updateAvailability(RiderDTO riderDTO) {
+        Optional<Rider> optionalRider = riderRepository.findById(riderDTO.getId());
+        if (optionalRider.isPresent()) {
+            Rider rider = optionalRider.get();
+            if(riderDTO.getRiderAvailability()==RiderAvailability.AVAILABLE)
+                rider.setRiderAvailability(RiderAvailability.AVAILABLE);
+            else
+                rider.setRiderAvailability(RiderAvailability.BREAK);
+            return Optional.of(riderRepository.save(rider));
+        }
+        return optionalRider;
+    }
+
+    public Optional<Rider> updateLocation(RiderDTO dto) throws JsonProcessingException {
+        Optional<Rider> optionalRider = riderRepository.findById(dto.getId());
+        if (optionalRider.isPresent()) {
+            Rider rider = optionalRider.get();
+            rider.setCurrentLocation(jsonMapper.getJsonNode(dto.getCurrentLocation()));
+            return Optional.of(riderRepository.save(rider));
+        } else {
+            log.error("invalid rider id: {}", dto.getId());
+            throw new InvalidUserIdException("invalid rider id", dto.getId());
+        }
+    }
+
+    public List<Rider> findByPostalCode(Integer postalCode) {
+        return riderRepository.findByPostalCodeAndAvailability(""+postalCode);
+    }
+
+    public List<Rider> findByCity(String city) {
+        return riderRepository.findByCityAndAvailability(city);
+    }
+
+    public Optional<Booking> completeJourney(String riderId) {
+        Optional<Rider> optionalRider = riderRepository.findById(riderId);
+        Booking booking = null;
+        if (optionalRider.isPresent()) {
+            Rider rider = optionalRider.get();
+            if(rider.getRiderAvailability()==RiderAvailability.BUSY) {
+                rider.setRiderAvailability(RiderAvailability.AVAILABLE);
+                Optional<Booking> optionalBooking = bookingRepository.findByAssignedRiderIdAndRideStatus(riderId, RideStatus.ACCEPTED);
+                if(optionalBooking.isPresent()){
+                    booking = optionalBooking.get();
+                    booking.setRideStatus(RideStatus.COMPLETED);
+                } else {
+                    log.error("booking not found for rider: {}", riderId);
+                    throw new RuntimeException("booking not found");
+                }
+                riderRepository.save(rider);
+            }
+            else {
+                log.error("rider is already free: {}", riderId);
+                throw new RuntimeException("rider is already free");
+            }
+        }
+        return Optional.ofNullable(booking);
     }
 
 }
