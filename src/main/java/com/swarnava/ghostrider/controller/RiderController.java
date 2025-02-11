@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -22,10 +23,10 @@ public class RiderController {
         return ResponseEntity.accepted().body(rideRequest);
     }
 
-    @GetMapping("/requestride")
-    public ResponseEntity checkRide(@RequestBody RideRequestDTO rideRequestDTO) throws IOException {
-//        RideRequest rideRequest = riderService.checkRide(rideRequestDTO);
-        return ResponseEntity.accepted().body(null);
+    @GetMapping("/recentbooking/{userId}")
+    public ResponseEntity checkRide(@PathVariable String userId) {
+        Optional<RideRequest> rideRequest = riderService.findRecentBooking(userId);
+        return ResponseEntity.accepted().body(rideRequest.get());
     }
 
 }

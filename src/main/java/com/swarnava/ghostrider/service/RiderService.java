@@ -49,17 +49,16 @@ public class RiderService {
             throw new RuntimeException(e);
         }
         objectMapper.readTree(pickupJsonString);
-        RideRequest rideRequest = new RideRequest(null, rideRequestDTO.getUserId(),
-                objectMapper.readTree(pickupJsonString), objectMapper.readTree(destinationJsonString), RideStatus.PENDING,
-                null);
+        RideRequest rideRequest = new RideRequest(rideRequestDTO.getUserId(),
+                objectMapper.readTree(pickupJsonString), objectMapper.readTree(destinationJsonString), RideStatus.PENDING);
         RideRequest request = rideRequestRepository.save(rideRequest);
         log.debug("startSearchingForRider... for {}",rideRequestDTO.getUserId());
         assignRiderService.startSearchingForRider(rideRequestDTO.getUserId()); // this will run in bg
         return request;
     }
 
-//    public RideRequest checkRide(String userId) {
-//        return rideRequestRepository.findByUserIdAndRideStatus(userId, RideStatus.PENDING);
-//    }
+    public Optional<RideRequest> findRecentBooking(String userId) {
+        return rideRequestRepository.findRecentBooking(userId);
+    }
 
 }

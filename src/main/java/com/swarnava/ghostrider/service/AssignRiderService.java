@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -40,8 +41,9 @@ public class AssignRiderService {
     public Rider findNearestAvailableRider(RideRequest rideRequest) {
 //        Passenger passengerCurrLoc = rideRequest.getPickupLocation()
 //        riderRepository.findByPostalCode(rideRequest.get)
+
         try {
-            Thread.sleep(10000);
+            Thread.sleep(15000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
