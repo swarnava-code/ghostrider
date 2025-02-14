@@ -13,15 +13,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class UserDefinedExceptionHandler {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<MessageForUserDefinedException> handleAlreadyActiveRidingException(RuntimeException exception) {
-        logger.warn(exception.getMessage(), " DATA: {}", exception.getLocalizedMessage());
-        return ResponseEntity.badRequest().body(new MessageForUserDefinedException(
-                exception.getMessage(), exception.getLocalizedMessage(),
-                RuntimeException.class, exception.getStackTrace()[0].toString()
-        ));
-    }
-
     @ExceptionHandler(AlreadyActiveRidingException.class)
     public ResponseEntity<MessageForUserDefinedException> handleAlreadyActiveRidingException(AlreadyActiveRidingException exception) {
         logger.warn(exception.getMessage(), " DATA: {}", exception.getData());

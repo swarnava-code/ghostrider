@@ -1,11 +1,15 @@
 package com.swarnava.ghostrider.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swarnava.ghostrider.entity.Rider;
 import com.swarnava.ghostrider.enume.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -14,7 +18,11 @@ public class ModifiableRiderDTO {
     private String name;
     private String email;
     private Gender gender;
-    private LocalDateTime dob;
+
+    //    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+//    private LocalDateTime dob;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dob;
     private String emergencyContact;
     private String permanentAddress;
 

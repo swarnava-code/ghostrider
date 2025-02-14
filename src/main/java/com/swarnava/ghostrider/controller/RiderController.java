@@ -63,10 +63,10 @@ public class RiderController {
     }
 
     /**
-     * @param riderDTO
+     * @param createRiderDTO
      * @return
      * @throws IOException
-     * @user after signup / admin
+     * @user when signup / admin
      */
     @PostMapping("/rider")
     public ResponseEntity<Rider> addNewRider(@RequestBody CreateRiderDTO createRiderDTO) throws IOException {
