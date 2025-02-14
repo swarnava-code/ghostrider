@@ -36,4 +36,4 @@ build/
 /src/main/resources/application.properties
 
 ### Hide security
-src/main/java/com/swarnava/ghostrider/config/jwttoken/*
+#src/main/java/com/swarnava/ghostrider/config/jwttoken/*
