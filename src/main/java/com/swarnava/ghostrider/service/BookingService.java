@@ -13,6 +13,7 @@ import com.swarnava.ghostrider.repository.RiderRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class BookingService {
             );
         }
         log.debug("saving request... for {}", bookingDTO.getUserId());
-                String pickupJsonString="", destinationJsonString="";
+        String pickupJsonString = "", destinationJsonString = "";
         try {
             pickupJsonString = objectMapper.writeValueAsString(bookingDTO.getPickupLocation());
             destinationJsonString = objectMapper.writeValueAsString(bookingDTO.getDestination());
@@ -72,7 +73,7 @@ public class BookingService {
         if (optionalRideRequest.isPresent()) {
             Booking booking = optionalRideRequest.get();
             booking.setRideStatus(RideStatus.CANCELLED_BY_PASSENGER);
-            if(booking.getAssignedRiderId()!=null){
+            if (booking.getAssignedRiderId() != null) {
                 Optional<Rider> rider = riderRepository.findById(booking.getAssignedRiderId());
                 rider.ifPresent(r -> {
                     r.setRiderAvailability(RiderAvailability.AVAILABLE);

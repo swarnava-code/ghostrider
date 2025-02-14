@@ -7,11 +7,11 @@
 - Java
 - Spring Boot
 
-## Module-2:
-- Client side Frontend Projects, also called `Angel Three`
+## Module-2: (Action item)
+- Client side Frontend Projects, also called `Angel Three` or `Angel AAA`
   1. Angular
   2. Android
-  3. ioS
+  3. Apple ioS
 
 
 ## Description
@@ -51,7 +51,14 @@ Need to deploy in a server and should be running, It will help passengers and ri
 ## License
 It's a demo app [Free]
 
+## Credits
+- [Security](https://medium.com/code-with-farhan/spring-security-jwt-authentication-authorization-a2c6860be3cf)
+
 ### TO-DO List
 - replace runtime exception handler, create more custom exception
 - replace native query
 - impl security
+- add more constraint to db
+- add more validation to dto and entity class
+- improve entity relationship and foreign key
+

@@ -1,0 +1,398 @@
+{
+	"info": {
+		"_postman_id": "0f9b73cf-665a-47d8-8ab5-0cd81824cce0",
+		"name": "Ghost Rider",
+		"description": "Rider App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19084984"
+	},
+	"item": [
+		{
+			"name": "Generate Bearer Token",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Your test name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"token\", jsonData.token);",
+									"});",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ex@example.com\",\n    \"password\": \"123456\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/rest/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"rest",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "APP VERSION",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"123\",\n    \"pickupLocation\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560029,\n        \"coordinates\": {\n            \"latitude\": 12.925883,\n            \"longitude\": 77.608753\n        },\n        \"address\": \"4th Main Rd, opposite to Kinder Play Equipment, Tavarekere, Maruti Nagar, Post, S.G. Palya, Bengaluru, Karnataka 560029\"\n    },\n    \"destination\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560103,\n        \"coordinates\": {\n            \"latitude\": 12.927991,\n            \"longitude\": 77.681615\n        },\n        \"address\": \"Outer Ring Rd, Adarsh Palm Retreat, Bellandur, Bengaluru, Karnataka 560103\"\n    }\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/version",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"version"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rider",
+			"item": [
+				{
+					"name": "Get Rider Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/rider/{{assignedRiderId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"rider",
+								"{{assignedRiderId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signup Rider",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{$randomUUID}}\",\n    \"name\": \"Tanmoy Mondal\",\n    \"riderAvailability\": \"BUSY\",\n    \"currentLocation\": {\n        \"city\": \"Tumakuru\",\n        \"postalCode\": 572101,\n        \"coordinates\": {\n            // \"latitude\": 12.925883,\n            // \"longitude\": 77.608753\n\n            // \"latitude\": 12.925883,\n            // \"longitude\": 77.608753\n\n            // \"latitude\": 12.925883,\n            // \"longitude\": 77.608753\n\n            // left\n            // \"latitude\": 12.926696,\n            // \"longitude\": 77.606180\n\n            // kora\n            //12.937283, 77.625815\n            // \"latitude\": 12.937283,\n            // \"longitude\": 77.625815\n\n            // tumakuru\n            // 13.349593, 77.126790\n            \"latitude\": 13.349593,\n            \"longitude\": 77.126790\n\n        },\n        \"address\": \"Belagumba\"\n    }\n}\n\n\n\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/rider",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"rider"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Availability",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"3e9c1a3d-ccf9-4aad-a063-f65f41f04048\",\n    \"name\": \"{{$randomFullName}}\",\n    \"riderAvailability\": \"AVAILABLE\", // MANDATORY - rider have 2 options here , [AVAILABLE, BREAK]\n    \"currentLocation\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560029,\n        \"coordinates\": {\n            // left\n            \"latitude\": 12.111111,\n            \"longitude\": 77.000000\n        },\n        \"address\": \"KKKK Police station-II, Bengaluru, Karnataka 560029\"\n    }\n}\n\n\n\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Complete Journey",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/completed/{{assignedRiderId}}",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"completed",
+								"{{assignedRiderId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Rider Client App",
+			"item": [
+				{
+					"name": "Update Location",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"d9ef748f-628b-437b-9c86-3f805f6ba24b\",\n    \"name\": \"{{$randomFullName}}\",\n    \"riderAvailability\": \"AVAILABLE\",\n\n    // MANDATORY\n    \"currentLocation\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560029,\n        \"coordinates\": {\n            /// p station\n            // \"latitude\": 12.927496,\n            // \"longitude\": 77.605199\n\n            // 12.918896, 77.609956 far\n            //  \"latitude\": 12.918896,\n            // \"longitude\": 77.609956\n\n            // 12.925559, 77.609202 sweet shop\n              \"latitude\": 12.925559,\n             \"longitude\": 77.609202\n        },\n        \"address\": \"S.G. Palya Police station, Bengaluru, Karnataka 560029\"\n    }\n}\n\n\n\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/location",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"location"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Passenger",
+			"item": [
+				{
+					"name": "Request a ride / Book a ride",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": \"3456\",\n    \"pickupLocation\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560029,\n        \"coordinates\": {\n            \"latitude\": 12.925763,\n            \"longitude\": 77.608503\n        },\n        \"address\": \"4th Main Rd, opposite to Kinder Play Equipment, Tavarekere, Maruti Nagar, Post, S.G. Palya, Bengaluru, Karnataka 560029\"\n    },\n    \"destination\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560103,\n        \"coordinates\": {\n            \"latitude\": 12.927991,\n            \"longitude\": 77.681615\n        },\n        \"address\": \"Outer Ring Rd, Adarsh Palm Retreat, Bellandur, Bengaluru, Karnataka 560103\"\n    }\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/booking",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"booking"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check ACTIVE Bookings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"",
+									"pm.test(\"Your test name\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.environment.set(\"assignedRiderId\", jsonData.assignedRiderId);",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/active-booking/3456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"active-booking",
+								"3456"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check Last Bookings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/last-booking/3456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"last-booking",
+								"3456"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Booking By Passenger",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "\n{\n    \"userId\": \"3456\",\n    \"pickupLocation\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560029,\n        \"coordinates\": {\n            \"latitude\": 12.925763,\n            \"longitude\": 77.608503\n        },\n        \"address\": \"4th Main Rd, opposite to Kinder Play Equipment, Tavarekere, Maruti Nagar, Post, S.G. Palya, Bengaluru, Karnataka 560029\"\n    },\n    \"destination\": {\n        \"city\": \"Bengaluru\",\n        \"postalCode\": 560103,\n        \"coordinates\": {\n            \"latitude\": 12.927991,\n            \"longitude\": 77.681615\n        },\n        \"address\": \"Outer Ring Rd, Adarsh Palm Retreat, Bellandur, Bengaluru, Karnataka 560103\"\n    }\n}\n\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/cancel",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

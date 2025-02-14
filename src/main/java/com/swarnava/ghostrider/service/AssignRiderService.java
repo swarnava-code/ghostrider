@@ -12,6 +12,7 @@ import com.swarnava.ghostrider.model.Coordinates;
 import com.swarnava.ghostrider.model.Location;
 import com.swarnava.ghostrider.repository.BookingRepository;
 import com.swarnava.ghostrider.repository.RiderRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -36,6 +37,7 @@ public class AssignRiderService {
     ObjectMapper objectMapper;
 
     @Async
+    @Transactional
     public CompletableFuture<Void> startSearchingForRider(String userId) throws JsonProcessingException {
         Optional<Booking> optionalRideRequest = bookingRepository.findByUserIdAndRideStatus(userId, RideStatus.PENDING);
         if (optionalRideRequest.isPresent()) {
@@ -61,7 +63,6 @@ public class AssignRiderService {
         }
         return CompletableFuture.completedFuture(null);
     }
-
 
     public Rider findNearestAvailableRider(Booking booking) throws JsonProcessingException {
 //        Passenger passengerCurrLoc = rideRequest.getPickupLocation()

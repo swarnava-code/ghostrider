@@ -2,6 +2,8 @@ package com.swarnava.ghostrider.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.swarnava.ghostrider.config.JsonMapper;
+import com.swarnava.ghostrider.dto.CreateRiderDTO;
+import com.swarnava.ghostrider.dto.ModifiableRiderDTO;
 import com.swarnava.ghostrider.dto.RiderDTO;
 import com.swarnava.ghostrider.entity.Booking;
 import com.swarnava.ghostrider.entity.Rider;
@@ -10,6 +12,7 @@ import com.swarnava.ghostrider.enume.RiderAvailability;
 import com.swarnava.ghostrider.exception.InvalidUserIdException;
 import com.swarnava.ghostrider.repository.BookingRepository;
 import com.swarnava.ghostrider.repository.RiderRepository;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,21 +31,29 @@ public class RiderService {
     @Autowired
     BookingRepository bookingRepository;
 
+    public Optional<Rider> findRider(String riderId){
+        return riderRepository.findById(riderId);
+    }
+
     /**
      * call after signup
      *
      * @return
      */
-    public Optional<Rider> saveNewRider(RiderDTO riderDTO) throws JsonProcessingException {
+    public Optional<Rider> saveNewRider(CreateRiderDTO createRiderDTO) throws JsonProcessingException {
         Rider rider = new Rider();
-        rider.setName(riderDTO.getName());
-        rider.setCurrentLocation(jsonMapper.getJsonNode(riderDTO.getCurrentLocation()));
-        rider.setRiderAvailability(RiderAvailability.BREAK);
+        rider = createRiderDTO.getEntity(rider);
+//        rider.setName(createRiderDTO.getName());
+//        rider.setEmail(createRiderDTO.getEmail());
+//        rider.setGender(createRiderDTO.getGender());
+//        rider.setEmergencyContact(createRiderDTO.getEmergencyContact());
+//        rider.setPermanentAddress(createRiderDTO.getPermanentAddress());
+//
         return Optional.of(riderRepository.save(rider));
     }
 
-    public Optional<Rider> updateAvailability(RiderDTO riderDTO) {
-        Optional<Rider> optionalRider = riderRepository.findById(riderDTO.getId());
+    public Optional<Rider> updateAvailability(String riderId, RiderDTO riderDTO) {
+        Optional<Rider> optionalRider = riderRepository.findById(riderId);
         if (optionalRider.isPresent()) {
             Rider rider = optionalRider.get();
             if(riderDTO.getRiderAvailability()==RiderAvailability.AVAILABLE)
@@ -54,15 +65,25 @@ public class RiderService {
         return optionalRider;
     }
 
-    public Optional<Rider> updateLocation(RiderDTO dto) throws JsonProcessingException {
-        Optional<Rider> optionalRider = riderRepository.findById(dto.getId());
+    public Optional<Rider> update(String riderId, ModifiableRiderDTO modifiableRiderDTO) {
+        Optional<Rider> optionalRider = riderRepository.findById(riderId);
+        if (optionalRider.isPresent()) {
+            Rider rider = optionalRider.get();
+            rider = modifiableRiderDTO.getEntity(rider, modifiableRiderDTO);
+            return Optional.of(rider);
+        }
+        return optionalRider;
+    }
+
+    public Optional<Rider> updateLocation(String riderId, RiderDTO dto) throws JsonProcessingException {
+        Optional<Rider> optionalRider = riderRepository.findById(riderId);
         if (optionalRider.isPresent()) {
             Rider rider = optionalRider.get();
             rider.setCurrentLocation(jsonMapper.getJsonNode(dto.getCurrentLocation()));
             return Optional.of(riderRepository.save(rider));
         } else {
-            log.error("invalid rider id: {}", dto.getId());
-            throw new InvalidUserIdException("invalid rider id", dto.getId());
+            log.error("invalid rider id: {}", riderId);
+            throw new InvalidUserIdException("invalid rider id", riderId);
         }
     }
 
@@ -74,6 +95,7 @@ public class RiderService {
         return riderRepository.findByCityAndAvailability(city);
     }
 
+    @Transactional
     public Optional<Booking> completeJourney(String riderId) {
         Optional<Rider> optionalRider = riderRepository.findById(riderId);
         Booking booking = null;
