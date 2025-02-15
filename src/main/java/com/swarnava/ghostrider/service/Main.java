@@ -2,7 +2,6 @@ package com.swarnava.ghostrider.service;
 
 import com.swarnava.ghostrider.enume.VehicleType;
 import com.swarnava.ghostrider.model.Coordinates;
-
 import java.util.Map;
 
 public class Main {

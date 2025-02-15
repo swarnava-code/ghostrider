@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -51,7 +50,6 @@ public class AssignRiderService {
                 throw new RiderNotAvailableException("rider not available at this moment", "rider not found");
             }
 
-            booking.setAssignedRiderId(rider.getId());
             booking.setRideStatus(RideStatus.ACCEPTED);
             bookingRepository.save(booking);
             rider.setRiderAvailability(RiderAvailability.BUSY);
@@ -65,8 +63,6 @@ public class AssignRiderService {
     }
 
     public Rider findNearestAvailableRider(Booking booking) throws JsonProcessingException {
-//        Passenger passengerCurrLoc = rideRequest.getPickupLocation()
-//        riderRepository.findByPostalCode(rideRequest.get)
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {

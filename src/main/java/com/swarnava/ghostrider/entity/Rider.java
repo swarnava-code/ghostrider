@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 //import com.swarnava.ghostrider.dto.CustomDateDeserializer;
+//import com.swarnava.ghostrider.entity.key.RiderId;
+import com.swarnava.ghostrider.dto.CreateRiderDTO;
 import com.swarnava.ghostrider.enume.Gender;
 import com.swarnava.ghostrider.enume.RiderAvailability;
 import jakarta.persistence.*;
@@ -29,31 +31,28 @@ public class Rider {
 
     // not allowed to change
 
+//    @Column(unique = true)
+//    @EmbeddedId
+//    RiderId riderId;
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(unique = true)
     private String id;
 
     @CreationTimestamp
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDateTime memberSince;
 
-    @NotEmpty
+    @Column(unique = true)
     private String phoneNumber;
 
 
     // can change later
-
-    @NotEmpty
     private String name;
-
-    @Email
     private String email;
-
-    @NotNull
     private Gender gender;
 
-    @NotNull
-//    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate dob;

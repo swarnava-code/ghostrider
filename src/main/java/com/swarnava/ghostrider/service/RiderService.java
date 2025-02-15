@@ -5,6 +5,7 @@ import com.swarnava.ghostrider.config.JsonMapper;
 import com.swarnava.ghostrider.dto.CreateRiderDTO;
 import com.swarnava.ghostrider.dto.ModifiableRiderDTO;
 import com.swarnava.ghostrider.dto.RiderDTO;
+import com.swarnava.ghostrider.dto.RiderRequestMapper;
 import com.swarnava.ghostrider.entity.Booking;
 import com.swarnava.ghostrider.entity.Rider;
 import com.swarnava.ghostrider.enume.RideStatus;
@@ -41,8 +42,13 @@ public class RiderService {
      * @return
      */
     public Optional<Rider> saveNewRider(CreateRiderDTO createRiderDTO) throws JsonProcessingException {
-        Rider rider = new Rider();
-        rider = createRiderDTO.getEntity(rider);
+
+        Rider rider = RiderRequestMapper.INSTANCE.toEntity(createRiderDTO);
+
+//        Rider rider = new Rider(createRiderDTO);
+
+
+        //rider = createRiderDTO.getEntity(rider);
 //        rider.setName(createRiderDTO.getName());
 //        rider.setEmail(createRiderDTO.getEmail());
 //        rider.setGender(createRiderDTO.getGender());

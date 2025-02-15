@@ -61,4 +61,4 @@ It's a demo app [Free]
 - add more constraint to db
 - add more validation to dto and entity class
 - improve entity relationship and foreign key
-
+- add composite key based on email and id

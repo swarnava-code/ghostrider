@@ -6,10 +6,10 @@ import com.swarnava.ghostrider.dto.RiderDTO;
 import com.swarnava.ghostrider.entity.Booking;
 import com.swarnava.ghostrider.entity.Rider;
 import com.swarnava.ghostrider.service.RiderService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 
 @RestController
@@ -69,7 +69,7 @@ public class RiderController {
      * @user when signup / admin
      */
     @PostMapping("/rider")
-    public ResponseEntity<Rider> addNewRider(@RequestBody CreateRiderDTO createRiderDTO) throws IOException {
+    public ResponseEntity<Rider> addNewRider(@Valid @RequestBody CreateRiderDTO createRiderDTO) throws IOException {
         return riderService.saveNewRider(createRiderDTO)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

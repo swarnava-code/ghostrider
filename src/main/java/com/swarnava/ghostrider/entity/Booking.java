@@ -9,16 +9,13 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.type.SqlTypes;
-
 import java.util.Date;
-
 
 @Entity
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @ToString
-//@JsonIgnoreProperties(ignoreUnknown = true) // Ignore unknown JSON properties
 public class Booking {
     @Id
     @GeneratedValue(strategy =  GenerationType.UUID)

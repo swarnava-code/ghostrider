@@ -1,51 +1,60 @@
 package com.swarnava.ghostrider.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.swarnava.ghostrider.entity.Rider;
 import com.swarnava.ghostrider.enume.Gender;
-import com.swarnava.ghostrider.enume.RiderAvailability;
-import com.swarnava.ghostrider.exception.MandatoryDataMissingException;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.hibernate.validator.constraints.Length;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateRiderDTO implements Serializable {
+
+    @NotEmpty
+    @NotNull
+    @NotBlank
+    @Length(min = 2)
     private String name;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Email
     private String email;
+
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Length(min = 8, max = 13)
+    @Pattern(regexp = "\\d+", message = "Phone number must contain only numbers")
     private String emergencyContact;
+
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Length(min = 8)
     private String permanentAddress;
+
+    @NotEmpty
+    @NotBlank
+    @NotNull
+    @Length(min = 8, max = 13)
+    @Pattern(regexp = "\\d+", message = "Phone number must contain only numbers")
+    private String phoneNumber;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private LocalDate dob;
 
-    public Rider getEntity(Rider entity) {
-        if (name == null || gender == null || email == null || emergencyContact == null || permanentAddress == null
-                || name.trim().equals("") || email.trim().equals("") || emergencyContact.trim().equals("")
-                || permanentAddress.trim().equals("") || dob == null
-        ) {
-            throw new MandatoryDataMissingException("Fields are mandatory while you creating new rider",
-                    this.toString());
-        }
-        entity.setEmail(email);
-        if (emergencyContact != null) entity.setEmergencyContact(emergencyContact);
-        if (gender != null) entity.setGender(gender);
-        if (name != null) entity.setName(name);
-        if (permanentAddress != null) entity.setPermanentAddress(permanentAddress);
-        if (dob != null) entity.setDob(dob);
-        entity.setRiderAvailability(RiderAvailability.BREAK);
-        return entity;
-    }
+
 }
