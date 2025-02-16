@@ -8,6 +8,7 @@ import com.swarnava.ghostrider.entity.Rider;
 import com.swarnava.ghostrider.enume.RideStatus;
 import com.swarnava.ghostrider.enume.RiderAvailability;
 import com.swarnava.ghostrider.exception.AlreadyActiveRidingException;
+import com.swarnava.ghostrider.exception.ParentUserDefinedException;
 import com.swarnava.ghostrider.repository.BookingRepository;
 import com.swarnava.ghostrider.repository.RiderRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -81,8 +82,9 @@ public class BookingService {
                 });
             }
             bookingRepository.save(booking);
+            return Optional.of(booking);
         }
-        return Optional.of(optionalRideRequest.get());
+        throw new ParentUserDefinedException("query not found any data: findByUserIdAndRideStatus()", bookingDTO.toString());
     }
 
 }

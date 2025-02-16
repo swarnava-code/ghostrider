@@ -38,8 +38,6 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     private RideStatus rideStatus;
 
-//    @OneToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "id")
     private String assignedRiderId;
 
     @CreationTimestamp

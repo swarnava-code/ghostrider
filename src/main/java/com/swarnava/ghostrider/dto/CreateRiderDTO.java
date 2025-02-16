@@ -2,14 +2,11 @@ package com.swarnava.ghostrider.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.swarnava.ghostrider.enume.Gender;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -24,7 +21,7 @@ public class CreateRiderDTO implements Serializable {
     @Length(min = 2)
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
     private Gender gender;
 
     @NotEmpty
@@ -54,6 +51,7 @@ public class CreateRiderDTO implements Serializable {
     private String phoneNumber;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
+    @Past
     private LocalDate dob;
 
 

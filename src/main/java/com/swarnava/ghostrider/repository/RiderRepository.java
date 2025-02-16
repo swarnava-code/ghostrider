@@ -12,10 +12,11 @@ import java.util.List;
 public interface RiderRepository extends JpaRepository<Rider, String> {
 
     @Query(value = "SELECT * FROM rider r " +
-            "WHERE r.current_location->>'city'=:city", nativeQuery = true)
+            "WHERE r.current_location->>'city'=:city AND r.rider_availability='AVAILABLE'", nativeQuery = true)
     List<Rider> findByCityAndAvailability(@Param("city") String city);
 
     @Query(value = "SELECT * FROM rider r " +
-            "WHERE r.current_location->>'postalCode'=:postalCode", nativeQuery = true)
+            "WHERE r.current_location->>'postalCode'=:postalCode " +
+            "AND r.rider_availability='AVAILABLE'", nativeQuery = true)
     List<Rider> findByPostalCodeAndAvailability(@Param("postalCode") String postalCode);
 }

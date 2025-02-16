@@ -55,10 +55,11 @@ It's a demo app [Free]
 - [Security](https://medium.com/code-with-farhan/spring-security-jwt-authentication-authorization-a2c6860be3cf)
 
 ### TO-DO List
-- replace runtime exception handler, create more custom exception
-- replace native query
-- impl security
-- add more constraint to db
-- add more validation to dto and entity class
-- improve entity relationship and foreign key
-- add composite key based on email and id
+- [x] replace runtime exception handler, create more custom exception 
+- [x] native query and jpql demo (native-RiderRepo, jpql-BookingRepo)
+- [x] jwt security demo
+- [x] add more constraint to db (Rider @Column)
+- [x] add more validation to dto and entity class (CreateRiderDTO)
+- [ ] improve entity relationship and foreign key
+- [ ] composite key demo
+

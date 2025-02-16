@@ -51,6 +51,7 @@ public class AssignRiderService {
             }
 
             booking.setRideStatus(RideStatus.ACCEPTED);
+            booking.setAssignedRiderId(rider.getId());
             bookingRepository.save(booking);
             rider.setRiderAvailability(RiderAvailability.BUSY);
             riderRepository.save(rider);

@@ -42,19 +42,7 @@ public class RiderService {
      * @return
      */
     public Optional<Rider> saveNewRider(CreateRiderDTO createRiderDTO) throws JsonProcessingException {
-
         Rider rider = RiderRequestMapper.INSTANCE.toEntity(createRiderDTO);
-
-//        Rider rider = new Rider(createRiderDTO);
-
-
-        //rider = createRiderDTO.getEntity(rider);
-//        rider.setName(createRiderDTO.getName());
-//        rider.setEmail(createRiderDTO.getEmail());
-//        rider.setGender(createRiderDTO.getGender());
-//        rider.setEmergencyContact(createRiderDTO.getEmergencyContact());
-//        rider.setPermanentAddress(createRiderDTO.getPermanentAddress());
-//
         return Optional.of(riderRepository.save(rider));
     }
 
@@ -76,6 +64,7 @@ public class RiderService {
         if (optionalRider.isPresent()) {
             Rider rider = optionalRider.get();
             rider = modifiableRiderDTO.getEntity(rider, modifiableRiderDTO);
+            riderRepository.save(rider);
             return Optional.of(rider);
         }
         return optionalRider;

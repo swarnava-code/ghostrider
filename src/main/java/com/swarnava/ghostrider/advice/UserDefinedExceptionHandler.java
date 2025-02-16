@@ -50,7 +50,7 @@ public class UserDefinedExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<MessageForUserDefinedException> handleConstraintViolationException(ConstraintViolationException exception) {
         log.warn(exception.getMessage(), " cause: {}", exception.getCause());
-        return handleException(exception);
+        return handleException(exception, false);
     }
 
     @ExceptionHandler(MandatoryDataMissingException.class)
@@ -59,21 +59,21 @@ public class UserDefinedExceptionHandler {
         return handleException(exception);
     }
 
-    @ExceptionHandler(PSQLException.class)
-    public ResponseEntity<MessageForUserDefinedException> handlePSQLException(PSQLException exception) {
-        log.warn(exception.getMessage(), " ServerErrorMessage: {}", exception.getServerErrorMessage());
-        return handleException(exception);
-    }
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<MessageForUserDefinedException> handleDataIntegrityViolationException(DataIntegrityViolationException exception) {
         log.warn(exception.getMessage(), " cause: {}", exception.getCause());
-        return handleException(exception);
+        return handleException(exception, false);
     }
 
 
 
     // TODO - Add more exception handler above the following method
+    @ExceptionHandler(ParentUserDefinedException.class)
+    public ResponseEntity<MessageForUserDefinedException> handleAlreadyActiveRidingException(ParentUserDefinedException exception) {
+        return handleException(exception);
+    }
+
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -83,12 +83,12 @@ public class UserDefinedExceptionHandler {
     }
 
     /**
-     * Last option to handle
+     * Last option to handle : handle Unknown RuntimeException
      * @param exception
      * @return
      */
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<MessageForUserDefinedException> handleException(RuntimeException exception) {
+    public ResponseEntity<MessageForUserDefinedException> handleUnknownException(RuntimeException exception) {
         log.error(exception.getMessage(), " DATA: {}", exception.getLocalizedMessage());
         exception.printStackTrace();
         return ResponseEntity.badRequest().body(new MessageForUserDefinedException(
@@ -98,13 +98,35 @@ public class UserDefinedExceptionHandler {
     }
 
     /**
+     * handle Known RuntimeException
+     * @param exception
+     * @return
+     */
+    private ResponseEntity<MessageForUserDefinedException> handleException(RuntimeException exception,
+                                                                                      boolean printStackTrace) {
+        log.error(exception.getMessage(), " DATA: {}", exception.getLocalizedMessage());
+        if(printStackTrace) exception.printStackTrace();
+        return ResponseEntity.badRequest().body(new MessageForUserDefinedException(
+                exception.getMessage(), exception.getLocalizedMessage(),
+                exception.getClass(), exception.getStackTrace()[0].toString()
+        ));
+    }
+
+    // handle Unknown Exception which is not child of Java RuntimeException
+    @ExceptionHandler(PSQLException.class)
+    public ResponseEntity<MessageForUserDefinedException> handlePSQLException(PSQLException exception) {
+        log.warn(exception.getMessage(), " ServerErrorMessage: {}", exception.getServerErrorMessage());
+        return handleUnknownExceptionOutOfJavaRuntimeException(exception);
+    }
+
+    /**
      * Outside Java Runtime Exception, but runtime exception
      * @example PSQLException,
      * @param exception
      * @return
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<MessageForUserDefinedException> handleException(Exception exception) {
+    public ResponseEntity<MessageForUserDefinedException> handleUnknownExceptionOutOfJavaRuntimeException(Exception exception) {
         log.error(exception.getMessage(), " DATA: {}", exception.getLocalizedMessage());
         exception.printStackTrace();
         return ResponseEntity.badRequest().body(new MessageForUserDefinedException(
